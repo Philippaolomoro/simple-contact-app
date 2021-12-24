@@ -1,0 +1,40 @@
+version: '3'
+services: 
+  client-app:
+    image: client-app
+    build: ./client/
+    stdin_open: true
+    ports:
+      - "3000:3000"
+    networks:
+      - contact-app  
+    volumes:
+      - ./client/:/usr/src/app
+      - /usr/src/app/node_modules
+  api-server:
+    image: api-server
+    build: ./server/
+    ports:
+      - "5050:5050"
+    networks:
+      - contact-app
+    volumes:
+      - ./server/:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - mongo    
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+    networks:
+      - contact-app
+    volumes:
+      - mongo-data:/data/db
+
+networks:
+  contact-app:
+    driver: bridge
+volumes:
+  mongo-data:
+    driver: local

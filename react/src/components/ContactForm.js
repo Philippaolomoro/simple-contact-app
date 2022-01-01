@@ -24,49 +24,68 @@ const styles ={
 
 const ContactForm = ({ classes }) => {
   const queryClient = useQueryClient();
+  const { updateStore, modal } = useStore();
+
   const createMutation = useMutation((data) => {
     return apiClient.post("/contacts", data);
   }, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(["contacts"]);
+    onMutate: async (createContact) => {
+      await queryClient.cancelQueries('/contacts')
+
+      const previousContacts = queryClient.getQueryData('/contacts');
+  
+      queryClient.setQueryData('/contacts', old => [...old.contacts, createContact]);
+  
+      return { previousContacts }
     },
-    onMutate: (data) => data,
+    onError: (_error, _createContact, context) => {
+      queryClient.setQueryData('/contacts', context.previousContacts);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries('/contacts');
+    },
   });
 
   const updateMutation = useMutation(({ contactId, ...data }) => {
     return apiClient.put(`/contacts/${contactId}`, data);
   }, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(["contacts"]);
+    onMutate: async (updateContact) => {
+      await queryClient.cancelQueries('/contacts')
+
+      const previousContacts = queryClient.getQueryData('/contacts');
+  
+      queryClient.setQueryData('/contacts', old => [...old.contacts, updateContact]);
+  
+      return { previousContacts }
     },
-    onMutate: (data) => data,
+    onError: (_error, updateContact, context) => {
+      queryClient.setQueryData('/contacts', context.previousContacts);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries('/contacts');
+    },
   });
 
-
-  const { updateStore, contact: {
-    editingId: contactId
-  }} = useStore();
-
-  const { data } = useQuery(`/contacts/${contactId}`, {
-    enabled: Boolean(contactId),
+  const { data } = useQuery(`/contacts/${modal.data.contactId}`, {
+    enabled: Boolean(modal.data.contactId),
   });
 
-  const handleCreateContact = useCallback(({
+  const handleCreateContact = useCallback(async ({
     phoneNumber,
     firstName,
     lastName,
     email,
   }, actions) => {
     try {
-      createMutation.mutate({
+      await createMutation.mutate({
         phoneNumber,
         firstName,
         lastName,
         email,
       });
 
-      updateStore("formModal", {
-        open: false,
+      updateStore("modal", {
+        name: null,
       });
       actions.resetForm();
     } finally {
@@ -74,14 +93,16 @@ const ContactForm = ({ classes }) => {
     }
   }, [createMutation]);
 
-  const handleUpdateContact = useCallback(({
+  const handleUpdateContact = useCallback(async ({
     phoneNumber,
     firstName,
     lastName,
     email,
   }, actions) => {
+    const { contactId } = modal.data;
+
     try {
-      updateMutation.mutate({
+      await updateMutation.mutate({
         phoneNumber,
         contactId,
         firstName,
@@ -89,14 +110,14 @@ const ContactForm = ({ classes }) => {
         email,
       });
 
-      updateStore("formModal", {
-        open: false,
+      updateStore("modal", {
+        name: null,
       });
       actions.resetForm();
     } finally {
       actions.setSubmitting(false);
     }
-  }, [contactId, updateMutation])
+  }, [modal.data, updateMutation])
 
   const initialValues = useMemo(() => {
     return [

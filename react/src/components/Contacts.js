@@ -7,7 +7,6 @@ import { useQuery } from "react-query";
 import { useStore } from "../store";
 import DeleteModal from "./DeleteModal";
 
-
 const styles ={
   paper: {
     margin: "24px",
@@ -22,11 +21,33 @@ const styles ={
 const Contacts = ({ classes }) => {
   const contact = useQuery("/contacts");
   const store = useStore();
-  const { isFetching, isFetched, error, data } = contact;
+  const { isFetching, isFetched, error, data, } = contact;
+
+  const handleOnDeleteContact = (editingId) => {
+    store.updateStore("modal", {
+      name: "deleteModal",
+      data: {
+        editingId,
+      }
+    });
+  }
+
+  const handleOnAddContact = () => {
+    store.updateStore("modal", { name: "createContactModal" });
+  }
+
+  const handleOnUpdateContact = (contactId) => {
+    store.updateStore("modal", {
+      name: "createContactModal",
+      data: { contactId }
+    })
+  }
 
   return (
     <Paper className={classes.paper}>
       <div className={classes.heading}>List of Contacts</div>
+
+      <Button onClick={handleOnAddContact}>Add Contact</Button>
 
       { isFetching && <h1>Loading...</h1> }
 
@@ -50,7 +71,9 @@ const Contacts = ({ classes }) => {
                     </Typography>
                   </Grid>
                   <Grid item>
-                      <DeleteModal variant="body2"/>
+                    <Button onClick={handleOnDeleteContact.bind(null, _id)}>
+                      Delete
+                    </Button>
                   </Grid>
                 </Grid>
 
@@ -59,10 +82,7 @@ const Contacts = ({ classes }) => {
                   color="primary"
                   size="large"
                   type="submit"
-                  onClick={() => {
-                    store.updateStore("contact", { editingId: _id });
-                    store.updateStore("formModal", { open: true })
-                  }}
+                  onClick={handleOnUpdateContact.bind(null, _id)}
                 >
                   Edit
                 </Button>             

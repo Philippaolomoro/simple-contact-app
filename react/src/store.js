@@ -9,14 +9,9 @@ export const StoreContext = createContext({
 
 export const StoreProvider = ({ children }) => {
     const [store, setStore] = useState({
-        formModal: {
-            open: false,
-        },
-        deleteModal: {
-            open: false,
-        },
-        contact: {
-            editingId: null
+        modal: {
+            name: null,
+            data: {},
         },
     });
 

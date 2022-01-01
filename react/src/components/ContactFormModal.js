@@ -25,27 +25,18 @@ const style = {
 };
 
 export default function ContactFormModal() {
-  const { formModal, updateStore } = useStore();
+  const { modal, updateStore } = useStore();
 
-  const handleOpen = () => updateStore("formModal", {
-    open: true,
-  });
-
-  const handleClose = () => updateStore("formModal", {
-    open: false,
-  });
+  const handleClose = () => {
+    updateStore("modal", {
+      name: null,
+    });
+  }
 
   return (
     <div>
-      <Button 
-        sx={style.button}
-        variant="contained"
-        color="primary"
-        size="large"
-        onClick={handleOpen}
-      >Add Contacts</Button>
       <Modal
-        open={formModal.open}
+        open={modal.name === "createContactModal"}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >

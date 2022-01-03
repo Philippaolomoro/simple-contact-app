@@ -1,8 +1,7 @@
-import Contact from "../models/contact.js.js";
+import Contact from "../models/contact.js";
 
 const controller = {
     addContact: async(req, res) => {
-        console.log(req.body)
         try {
             const {firstName, lastName, email, phoneNumber} = req.body
             const contact = await Contact.findOne({email: req.body.email})

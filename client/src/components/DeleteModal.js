@@ -6,7 +6,7 @@ import { useMutation } from "react-query";
 import sweetalert from "sweetalert";
 import { useStore } from '../store';
 import apiClient from "../http-common";
-import { queryClient } from "../"
+import { queryClient } from ".."
 
 
 const style = {

@@ -3,7 +3,7 @@ services:
   client-app:
     image: client-app
     # TODO change build to ./react and build again
-    build: ./react/
+    build: ./client/
     stdin_open: true
     ports:
       - "3000:3000"
@@ -14,7 +14,7 @@ services:
       - /usr/src/app/node_modules
   api-server:
     image: api-server
-    build: ./server/
+    build: ./backend/
     ports:
       - "5050:5050"
     networks:

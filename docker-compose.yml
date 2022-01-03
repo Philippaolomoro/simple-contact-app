@@ -2,8 +2,7 @@ version: '3'
 services: 
   client-app:
     image: client-app
-    # TODO change build to ./react and build again
-    build: ./client/
+    build: ./react/
     stdin_open: true
     ports:
       - "3000:3000"

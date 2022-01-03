@@ -8,6 +8,7 @@ import { useStore } from '../store';
 import apiClient from "../http-common";
 import { queryClient } from "../"
 
+
 const style = {
   theme: {
     position: 'absolute',
@@ -70,7 +71,13 @@ export default function DeleteModal() {
       >
         <Box sx={style.theme}>
           <h2>Are you sure you want to delete?</h2>
-          <Button onClick={handleDelete}>Yes</Button>
+          <Button 
+            onClick={handleDelete} 
+            variant="outlined" 
+            color="error"
+          >
+            Yes
+          </Button>
           <Button onClick={handleClose}>No</Button>
         </Box>
       </Modal>

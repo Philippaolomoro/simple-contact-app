@@ -8,6 +8,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useStore } from "../store";
 import apiClient from "../http-common";
 
+
 const styles ={
   root: {
     '& .MuiTextField-root': { margin: "8px", },
@@ -211,17 +212,17 @@ const ContactForm = ({ classes }) => {
               type="reset"
               onClick={() => {
                 handleReset();
-                updateStore("contact", {
-                  editingId: null,
+                updateStore("modal", {
+                  name: "createContactModal",
+                  data: {},
                 });
-                updateStore("formModal", { open: false });
+                // updateStore("modal", { name: null });
               }}
               className={classes.submitButton}
             >
               Reset
             </Button>
-          )}
-          
+          )}          
         </form>
       )}
     </Formik>

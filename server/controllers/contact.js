@@ -69,6 +69,7 @@ const controller = {
             let recordToUpdate = {
                 firstName: req.body.firstName,
                 lastName: req.body.lastName,
+                email: req.body.email,
                 phoneNumber: req.body.phoneNumber
             }
             

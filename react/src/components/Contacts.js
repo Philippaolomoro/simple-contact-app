@@ -1,11 +1,10 @@
-import { Paper, List, ListItem, ListItemText, Divider, Button, Grid, Typography } from "@mui/material";
+import { Paper, List, ListItem, Divider, Button, Grid, Typography, Stack, Box, AppBar, Toolbar } from "@mui/material";
 import { withStyles } from "@mui/styles";
-import { fontWeight } from "@mui/system";
 import PropTypes from "prop-types";
 import { Fragment } from "react";
 import { useQuery } from "react-query";
 import { useStore } from "../store";
-import DeleteModal from "./DeleteModal";
+
 
 const styles ={
   paper: {
@@ -13,8 +12,7 @@ const styles ={
     padding: "16px" 
   },
   heading: {
-    fontSize: "1.5em",
-    fontWeight:"700"
+    background: "white"
   }
 }
 
@@ -45,9 +43,23 @@ const Contacts = ({ classes }) => {
 
   return (
     <Paper className={classes.paper}>
-      <div className={classes.heading}>List of Contacts</div>
-
-      <Button onClick={handleOnAddContact}>Add Contact</Button>
+      <Box sx={{ flexGrow: 1}} >
+        <AppBar position="static" sx={{background:"white"}}>
+          <Toolbar>
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1, color:"black" }}>
+              List of Contacts
+            </Typography>
+            <Button 
+              onClick={handleOnAddContact} 
+              variant="contained" 
+              size="large"
+            >
+              Add Contact
+            </Button>
+          </Toolbar>
+        </AppBar>
+        
+      </Box>
 
       { isFetching && <h1>Loading...</h1> }
 
@@ -70,30 +82,31 @@ const Contacts = ({ classes }) => {
                       {phoneNumber}
                     </Typography>
                   </Grid>
-                  <Grid item>
-                    <Button onClick={handleOnDeleteContact.bind(null, _id)}>
-                      Delete
-                    </Button>
-                  </Grid>
                 </Grid>
-
-                <Button
-                  variant="contained"
-                  color="primary"
-                  size="large"
-                  type="submit"
-                  onClick={handleOnUpdateContact.bind(null, _id)}
-                >
-                  Edit
-                </Button>             
+                <Stack direction="row" spacing={2}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    size="large"
+                    type="submit"
+                    onClick={handleOnUpdateContact.bind(null, _id)}
+                  >
+                    Edit
+                  </Button>
+                  <Button 
+                    onClick={handleOnDeleteContact.bind(null, _id)} 
+                    variant="outlined" 
+                    color="error"
+                  >
+                    Delete
+                  </Button>      
+                </Stack>                    
               </ListItem>             
-              <Divider component="li" />
-              
+              <Divider component="li" />              
             </Fragment>
           ))}
         </List>
       )}
-
     </Paper>
   );
 }

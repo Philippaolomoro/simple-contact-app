@@ -99,7 +99,13 @@ const Contacts = ({ classes }) => {
                     color="error"
                   >
                     Delete
-                  </Button>      
+                  </Button>  
+                  <Button 
+                    variant="outlined" 
+                    color="error"
+                  >
+                    History
+                  </Button>    
                 </Stack>                    
               </ListItem>             
               <Divider component="li" />              

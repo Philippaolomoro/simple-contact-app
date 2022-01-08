@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const ContactSchema = new mongoose.Schema(
+const ContactHistorySchema = new mongoose.Schema(
     {
         firstName:{
             type: String,
@@ -14,16 +14,13 @@ const ContactSchema = new mongoose.Schema(
         phoneNumber:{
             type: String,
         },
-        history: [{
+        contactId: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "ContactHistory"
-        }]
-    },
-    {
-        timestamps: true,
+            ref: "Contact"
+        }
     }
 )
 
-const contactModel = mongoose.model("Contact", ContactSchema);
+const contactHistoryModel = mongoose.model("ContactHistory", ContactHistorySchema);
 
-export default contactModel
+export default contactHistoryModel

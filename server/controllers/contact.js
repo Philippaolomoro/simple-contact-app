@@ -1,4 +1,5 @@
 import Contact from "../models/contact.js";
+import ContactHistory from "../models/contactHistory.js";
 
 const controller = {
     addContact: async(req, res) => {
@@ -7,11 +8,27 @@ const controller = {
             const contact = await Contact.findOne({email: req.body.email})
             if(!contact){
                 const newContact = await new Contact({firstName, lastName, email, phoneNumber})
+
+                const history = new ContactHistory({
+                    contactId: newContact._id,
+                    firstName: newContact.firstName,
+                    lastName: newContact.lastName,
+                    email: newContact.email,
+                    phoneNumber: newContact.phoneNumber
+                })
+
+                history.save()
+                newContact.history.push(history._id)
+
                 await newContact.save(err => {
                     if(err){
                         return res.status(400).json({error: err.message, message: "Could not be created"})
                     } 
-                    
+                    // newContact.history.push({firstName: newContact.firstName, lastName: newContact.lastName, email: newContact.email, phoneNumber: newContact.phoneNumber}) - hardcoded
+
+                    // push to the history model
+
+
                     return res.status(200).json({
                         data: newContact,
                         message: "Contact created successfully"
@@ -30,7 +47,7 @@ const controller = {
 
     viewContacts: async(req, res) => {
         try {
-            const contacts = await Contact.find({})
+            const contacts = await Contact.find({}).populate("history").lean()
 
             return res.status(200).json({
                 message: "Contacts gotten successfully",
@@ -65,21 +82,38 @@ const controller = {
 
     updateContact: async(req, res) => {
         try {
+            const contact = await Contact.findById({_id: req.params._id});
+
             let recordToUpdate = {
                 firstName: req.body.firstName,
                 lastName: req.body.lastName,
                 email: req.body.email,
                 phoneNumber: req.body.phoneNumber
             }
-            
-            const contact = await Contact.findByIdAndUpdate(
+
+            const updatedContact = await Contact.findByIdAndUpdate(
                 req.params._id,
                 {
                     $set: recordToUpdate,
                 },
                 {new: true}
             )
-            return res.status(200).json({message: "Contact updated successfully"})
+
+            if(updatedContact){
+                const history = new ContactHistory({
+                    contactId: updatedContact._id,
+                    firstName: updatedContact.firstName,
+                    lastName: updatedContact.lastName,
+                    email: updatedContact.email,
+                    phoneNumber: updatedContact.phoneNumber
+                })
+                history.save()
+                updatedContact.history.push(history._id)
+                updatedContact.save()
+            }
+
+            
+            return res.status(200).json({ message: "Contact updated successfully"})
         } catch (err) {
             return res.status(500).json({
                 error: err.message,

@@ -8,6 +8,7 @@ router.get("/", controller.viewContacts);
 router.get("/:_id", controller.viewOneContact);
 router.put("/:_id", controller.updateContact);
 router.delete("/:_id", controller.deleteContact);
+router.get("/:contactId/history", controller.getContactHistory);
 
 
 export default router;

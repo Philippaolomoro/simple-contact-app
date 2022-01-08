@@ -132,6 +132,18 @@ const controller = {
                 message: "Internal server error, please try again"
             })
         }
+    },
+
+    getContactHistory: async(req, res) => {
+        try {
+            const history = await ContactHistory.find({contactId: req.params.contactId}).lean()
+            return res.status(200).json({message: "Clients gotten successfully",history})
+        } catch (err) {
+            return res.status(500).json({
+                error: err.message,
+                message: "Internal server error, please try again"
+            })
+        }
     }
 }
 

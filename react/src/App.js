@@ -2,6 +2,7 @@ import { AppBar, Container, Typography } from "@mui/material";
 import Contacts from "./components/Contacts.js"
 import ContactFormModal from "./components/ContactFormModal"
 import DeleteModal from "./components/DeleteModal";
+import ContactHistoryModal from "./components/ContactHistoryModal";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         </AppBar>
         <ContactFormModal/>
         <DeleteModal />
+        <ContactHistoryModal />
         <Contacts />             
       </Container>
     </div>

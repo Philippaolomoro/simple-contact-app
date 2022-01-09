@@ -30,6 +30,13 @@ const Contacts = ({ classes }) => {
     });
   }
 
+  const handleOnViewContactHistory = (contactId) => {
+    store.updateStore("modal", {
+      name: "contactHistoryModal",
+      data: {contactId}
+    });
+  }
+
   const handleOnAddContact = () => {
     store.updateStore("modal", { name: "createContactModal" });
   }
@@ -101,8 +108,9 @@ const Contacts = ({ classes }) => {
                     Delete
                   </Button>  
                   <Button 
+                    onClick={handleOnViewContactHistory.bind(null, _id)}
                     variant="outlined" 
-                    color="error"
+                    
                   >
                     History
                   </Button>    

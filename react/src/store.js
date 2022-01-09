@@ -3,6 +3,7 @@ import React, { useContext, useState, createContext } from "react";
 export const StoreContext = createContext({
     formModal: {},
     deleteModal: {},
+    contactHistoryModal: {},
     contact: {},
     updateStore: () => {},
 });

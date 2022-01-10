@@ -34,7 +34,6 @@ const controller = {
                     if(err){
                         return res.status(400).json({error: err.message, message: "Could not be created"})
                     } 
-                    
                     return res.status(200).json({
                         data: newContact,
                         message: "Contact created successfully"

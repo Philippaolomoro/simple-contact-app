@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from "mongoose"; 
 
 const ContactHistorySchema = new mongoose.Schema(
     {
@@ -17,11 +17,14 @@ const ContactHistorySchema = new mongoose.Schema(
         contactId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Contact"
+        },
+        updated_at_date: {
+            type: String
+        },
+        updated_at_time: {
+            type: String
         }
-    }, 
-    {
-        timestamps: true
-    }
+    },
 )
 
 const contactHistoryModel = mongoose.model("ContactHistory", ContactHistorySchema);

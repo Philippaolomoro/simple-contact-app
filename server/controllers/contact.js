@@ -9,12 +9,22 @@ const controller = {
             if(!contact){
                 const newContact = await new Contact({firstName, lastName, email, phoneNumber})
 
+                const time = new Date(Date.now()).toLocaleTimeString('en', {
+                    timeStyle: 'short',
+                    hour12: false,
+                    timeZone: 'UTC',
+                });
+
+                const date = new Date().toISOString().slice(0,10);
+
                 const history = new ContactHistory({
                     contactId: newContact._id,
                     firstName: newContact.firstName,
                     lastName: newContact.lastName,
                     email: newContact.email,
-                    phoneNumber: newContact.phoneNumber
+                    phoneNumber: newContact.phoneNumber,
+                    updated_at_date: date,
+                    updated_at_time: time
                 })
 
                 history.save()
@@ -24,11 +34,7 @@ const controller = {
                     if(err){
                         return res.status(400).json({error: err.message, message: "Could not be created"})
                     } 
-                    // newContact.history.push({firstName: newContact.firstName, lastName: newContact.lastName, email: newContact.email, phoneNumber: newContact.phoneNumber}) - hardcoded
-
-                    // push to the history model
-
-
+                    
                     return res.status(200).json({
                         data: newContact,
                         message: "Contact created successfully"
@@ -82,7 +88,14 @@ const controller = {
 
     updateContact: async(req, res) => {
         try {
-            const contact = await Contact.findById({_id: req.params._id});
+
+            const time = new Date(Date.now()).toLocaleTimeString('en', {
+                timeStyle: 'short',
+                hour12: false,
+                timeZone: 'GMT',
+            });
+
+            const date = new Date().toISOString().slice(0,10);
 
             let recordToUpdate = {
                 firstName: req.body.firstName,
@@ -105,7 +118,9 @@ const controller = {
                     firstName: updatedContact.firstName,
                     lastName: updatedContact.lastName,
                     email: updatedContact.email,
-                    phoneNumber: updatedContact.phoneNumber
+                    phoneNumber: updatedContact.phoneNumber,
+                    updated_at_date: date,
+                    updated_at_time: time
                 })
                 history.save()
                 updatedContact.history.push(history._id)
@@ -125,7 +140,11 @@ const controller = {
     deleteContact: async(req, res) => {
         try {
             const contact = await Contact.deleteOne({_id: req.params._id});
-            return res.status(200).json({message: "Contact deleted successfully"});
+            if (contact) {
+                const history = await ContactHistory.deleteMany({contactId: req.params._id})
+                return res.status(200).json({message: "Contact deleted successfully"});
+            }
+            
         } catch (err) {
             return res.status(500).json({
                 error: err.message,

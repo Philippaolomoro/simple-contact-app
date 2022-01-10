@@ -36,8 +36,6 @@ export default function ContactHistoryModal(){
 
   const { isFetching, isFetched, error, data } = contactHistory
 
-  // console.log(data?.history)
-
   return (
     <div>
       <Modal
@@ -53,7 +51,7 @@ export default function ContactHistoryModal(){
 
           { isFetched && data?.history && (
             <List>
-              {data?.history.map(({ _id, firstName, phoneNumber, lastName, email, updatedAt }) => (
+              {data?.history.map(({ _id, firstName, phoneNumber, lastName, email, updated_at_date, updated_at_time }) => (
                 <Fragment key={_id}>
                   <ListItem>
                     <Grid item xs container direction="column" spacing={2}>
@@ -68,7 +66,10 @@ export default function ContactHistoryModal(){
                           {phoneNumber}
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
-                          {updatedAt}
+                          Date updated: {updated_at_date}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          Time updated: {updated_at_time}
                         </Typography>
                       </Grid>
                     </Grid>
